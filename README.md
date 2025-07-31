@@ -20,6 +20,13 @@ pip install -r requirements.txt
     > Succesfully installed ....
 ```
 
+```bash
+vim .env
+    > OPENAI_API_KEY='...'
+    > OPENAI_ENDPOINT="..."
+    > OPENAI_API_VERSION="2024-05-01-preview"
+```
+
 # Architecture
 
 TODO

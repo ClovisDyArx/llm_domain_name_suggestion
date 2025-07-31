@@ -2,16 +2,19 @@ import os
 import json
 import time
 from dotenv import load_dotenv
+load_dotenv(dotenv_path='.env')
 
 from openai import AzureOpenAI
 
 from tqdm import tqdm
 
+import torch
+from torch.utils.data import Dataset
+from datasets import load_dataset
 
-# FIXME: doc pour .env
-load_dotenv(dotenv_path='.env')
+from utils import format_prompt
 
-
+# ----- Synthetic dataset creation -----
 def get_seed_business_ideas() -> list[str]:
     """
     Returns a list of business ideas for the synthetic dataset.
@@ -203,7 +206,7 @@ def get_sys_prompt() -> str:
 
 
 def generate_sample(
-    client : any,
+    client : AzureOpenAI,
     business_idea : str
     ) -> str:
     """
@@ -228,7 +231,7 @@ def generate_sample(
 
 
 def create_dataset(
-    client : any,
+    client : AzureOpenAI,
     output_path : str,
     debug : bool = False
     ) -> None:
@@ -253,6 +256,21 @@ def create_dataset(
 
     if debug:
         print(f"[DEBUG] Dataset creation complete.\nSaved to {output_path}")
+# ----- Synthetic dataset creation -----
+
+# Dataset class for training
+class DomainDataset(Dataset):
+    def __init__(self, data_files="data/training_dataset.jsonl"):
+        self.raw_dataset = load_dataset("json", data_files=data_files, split="train")
+        self.formatted_dataset = self.raw_dataset.map(format_prompt)
+        
+
+    def __len__(self):
+        return len(self.formatted_dataset)
+
+    def __getitem__(self, idx):
+        return self.formatted_dataset.iloc[idx, 1]
+
 
 if __name__ == '__main__':
     client = AzureOpenAI(
