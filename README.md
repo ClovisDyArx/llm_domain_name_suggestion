@@ -1,2 +1,15 @@
-# llm_domain_name_suggestion
-AI Eng - Take home assignment
+# LLM for domain name suggestion
+
+AI Engineering - Take home assignment
+
+# Setup
+
+TODO
+
+# Architecture
+
+TODO
+
+# How to Use
+
+TODO
