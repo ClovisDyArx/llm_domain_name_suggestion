@@ -1,0 +1,12 @@
+//technical words
+{"business_description": "A B2B SaaS for quantum-resistant cryptographic key exchange.", "domain_suggestions": ["rsasucks.com", "hackerkey.net", "cryptkey.fr", "freevbucksonline.net", "softkey.org"]}
+//vague description
+{"business_description": "A cool new app for people.", "domain_suggestions": ["tinder.com", "peoplepleaser.app", "peep-all.org", "people.net", "meetus.fr"]}
+//negative constraints
+{"business_description": "A pet store that only sells supplies and does not sell any live animals, especially not puppies.", "domain_suggestions": ["petfood.com", "goldfish.fr", "wedonotsellpuppies.app", "littlestpetshop.org", "pawsitiveprovisions.co"]}
+//abstract concepts
+{"business_description": "A digital journal app focused on the principles of Stoic philosophy.", "domain_suggestions": ["stoic.com", "artistotle.io", "lifejournal.app", "introspection.org", "philosopy-easy.co"]}
+//multilingual
+{"business_description": "Une boulangerie artisanale à Paris.", "domain_suggestions": ["pain.fr", "baguette.com", "artipain.io", "partisanal.fr", "chocopain.com"]}
+//coloquialism
+{"business_description": "Un truc de ouf malade pour la course, genre quelqu'un qui prend ses jambes à son cou.", "domain_suggestions": ["runni.ng", "coursleloup.fr", "vite.com", "sprinter.io", "runaway.co"]}

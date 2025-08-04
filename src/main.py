@@ -61,5 +61,9 @@ def judge_pipeline() -> pd.DataFrame:
     return eval_df
 
 
+def edge_cases():# -> pd.DataFrame:
+    return True
+
+
 if __name__ == "__main__":
     eval_df = judge_pipeline()

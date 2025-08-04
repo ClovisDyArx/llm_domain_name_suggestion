@@ -1,1 +1,7 @@
-# FIXME : placeholder
+--- Baseline Model Performance ---
+{
+  "avg_relevance": 4.731343283582089,
+  "avg_creativity": 3.7313432835820897,
+  "avg_diversity": 3.5970149253731343,
+  "avg_overall": 4.0243283582089555
+}
