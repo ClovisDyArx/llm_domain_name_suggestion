@@ -49,57 +49,71 @@ def format_answer_gemma2(suggestion : str) -> list[str]:
     * **OceanBloom.com**
     * **SeascapeThreads.com**
     """
-    pattern = r'\*\*(?!.*?:)([^*]+?)\*\*'
-    matches = re.findall(pattern, suggestion)
+    # --- Format 1: Bolded domains like **OceanToWear.com:**
+    pattern_bold = r'\*\*([^*\n]+?)\*\*'
+    matches = re.findall(pattern_bold, suggestion)
 
-    domains = [match.strip() for match in matches]
-    
+    domains = []
+    for match in matches:
+        domain = match.strip().rstrip(":").rstrip(".")
+        if " " in domain:
+            continue
+        if re.match(r'^\[.*\]$', domain):  # skip placeholders
+            continue
+        if len(domain) < 4:
+            continue
+        domains.append(domain)
+
+    if len(domains) > 5:
+        return domains
+
+    # --- Format 2: Bullet point domains (non-bolded)
+    candidate_lines = re.findall(r'^[*-]\s+(.*)', suggestion, re.MULTILINE)
+
+    for line in candidate_lines:
+        candidate = line.strip().split(":")[0].strip().rstrip(".")
+
+        if not candidate or " " in candidate:
+            continue
+        if re.match(r'^\[.*\]$', candidate):
+            continue
+        if len(candidate) < 4:
+            continue
+        if candidate not in domains:
+            domains.append(candidate)
+
     return domains
 
 
 if __name__ == "__main__":
-    test = """    - user
+    test = """user
     Generate a diverse list of high-quality domain names for the following business: A sustainable fashion brand that uses recycled ocean plastic.
     model
-    ## Sustainable Fashion Domain Names:
+    Here's a diverse list of domain names for a sustainable fashion brand using recycled ocean plastic, categorized for your consideration:
 
-    **Short & Catchy:**
+    **Descriptive & Clear:**
 
-    * **OceanChic.com**
-    * **PlasticsToFashion.com**
-    * **ReThread.com**
-    * **EcoThreads.com**
-    * **SeaStyle.com**
-    * **WaveWear.com**
-    * **Re.Made.Fashion.com**
-    * **OceanBloom.com**
-    * **SeascapeThreads.com**
+    * **OceanToWear.com:**  Direct and emphasizes the origin of materials.
+    * **PlasticReimagined.com:**  Highlights the brand's innovative approach.
+    * **SeaToStyle.com:**  Connects fashion to the ocean and sustainability.
+    * **Re.Fashion.Ocean.com:**  Catchy and emphasizes the circularity of the process.
+    * **RecycledWaves.com:**  Playful and evokes a sense of movement and change.
 
-    **Descriptive:**
+    **Catchy & Modern:**
 
-    * **RecycledOceanFashion.com**
-    * **SustainableOceanFashion.com**
-    * **OceanPlasticApparel.com**
-    * **OceanPlasticsToFashion.com**
-    * **EcoFashionFromOcean.com**
-    * **ConsciousFashionRemade.com**
-    * **OceanPlasticUpcycled.com**
+    * **AquaBloom.com:**  Evokes a sense of growth and beauty from recycled materials.
+    * **Re.Thread.com:**  Short, memorable, and hints at the material's origin.
+    * **OceanVerse.com:**  Modern and suggests a world of sustainable fashion.
+    * **SeaShift.com:**  Implies a change in the fashion industry and its impact.
+    * **ThePlasticMuse.com:**  Intriguing and connects fashion to a creative force.
 
     **Unique & Playful:**
 
-    * **TheOceanistas.com**
-    * **ReimaginedWaves.com**
-    * **PlasticToPretty.com**
-    * **WaveYourStyle.com**
-    * **CoralThreads.com**
-    * **ReFashionedSea.com**
-    * **AquaCouture.com**
+    * **WaveWear.com:**  Simple, memorable, and focuses on the ocean's connection.
+    * **MermaidThreads.com:**  Whimsical and appeals to a specific audience.
+    * **Re.Shore.Style.com:**  
 
-    **More Specific:**
 
-    * **SeaToStyle.com** (focus on upcycling and transformation)
-    * **OceanReimagined.com** (highlighting innovative design)
-    * **ThePlasticFashionist.com** (targeting a specific audience)
-    * **RemadeWithOcean.com** (emphas"""
+    Business idea: 'A sustainable fashion brand that uses recycled ocean plastic.'"""
     
     print(format_answer_gemma2(test))

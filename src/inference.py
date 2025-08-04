@@ -58,25 +58,26 @@ def generate_suggestions(business_description: str) -> list[str]:
         **inputs,
         max_new_tokens=300,
         do_sample=True,
-        temperature=0.7,
+        temperature=0.5,
         top_p=0.9,
         eos_token_id=tokenizer.eos_token_id
     )
     
     result_full = tokenizer.decode(outputs[0], skip_special_tokens=True)
     result_only_generated = result_full.split("<start_of_turn>model\n")[-1]
-
-    suggestions = format_answer_gemma2(result_only_generated)
     
+    # print(f"generated answer, uncleaned :\n{result_only_generated}\n\n")
+
+    suggestions = format_answer_gemma2(result_only_generated)  
     return suggestions
 
 
 if __name__ == '__main__':
     # exemple d'utilisation
     test_description = "A sustainable fashion brand that uses recycled ocean plastic."
+    suggestions = generate_suggestions(test_description)
     
     print(f"Business idea: '{test_description}'")
-    suggestions = generate_suggestions(test_description)
     print("\nGenerated Suggestions:")
     for s in suggestions:
         print(f"- {s}")
