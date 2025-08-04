@@ -164,7 +164,100 @@ def get_seed_business_ideas() -> list[str]:
         "A workshop that teaches woodworking and carpentry skills.",
         "A brand that sells high-quality hiking and camping gear.",
     ]
-    
+
+
+def get_sbi_test() -> list[str]:
+    """
+    Returns a list of business ideas for the synthetic test dataset.
+    The list was generated using AI.
+    """
+    return [
+        # Simple
+        "A mobile plant care service for indoor houseplants.",
+        "A blog documenting minimalist travel experiences.",
+        "A pet-sitting service tailored for exotic animals.",
+        "An online shop selling digital planners and templates.",
+
+        # Moderate
+        "A subscription box for international stationery supplies.",
+        "An app that suggests recipes based on what’s in your fridge.",
+        "A service that rents designer handbags and accessories.",
+        "An online store for upcycled fashion made from thrift finds.",
+
+        # Complex
+        "A SaaS platform for predictive maintenance in manufacturing.",
+        "A blockchain-based marketplace for licensing digital music.",
+        "A startup using AI to optimize warehouse robotics operations.",
+        "A virtual interior design service using photorealistic 3D modeling.",
+
+        # Technology/SaaS
+        "A tool that generates SEO-optimized blog outlines from keywords.",
+        "A CRM specifically designed for indie consultants and coaches.",
+        "An AI assistant that edits YouTube videos based on engagement metrics.",
+        "A platform that automates podcast episode distribution and analytics.",
+        "A browser extension that flags misleading online content.",
+        "A productivity tool for writers that blocks distractions and gamifies focus.",
+        "A platform for automating customer loyalty programs for Shopify stores.",
+        "A no-code app builder for wellness professionals.",
+        "A service that syncs all team chats across multiple platforms.",
+        "A SaaS that helps landlords manage rent collection and maintenance requests.",
+
+        # E-commerce
+        "A marketplace for ethically sourced home fragrances.",
+        "A subscription box for journaling and self-reflection prompts.",
+        "An online store for modular travel backpacks and accessories.",
+        "A boutique e-commerce site for hand-dyed textiles.",
+        "A platform selling digital art wallpapers for phones and desktops.",
+        "A curated subscription box of indie zines and small-press literature.",
+        "An online store specializing in pet-safe indoor plants.",
+        "A dropshipping business for customizable LED signs.",
+        "A platform selling vintage-inspired children's toys.",
+        "An e-commerce shop for sustainable menstrual products.",
+
+        # Local Services
+        "A mobile tailoring and clothing repair service.",
+        "A local compost pickup and delivery service.",
+        "A service offering guided city walks by local artists.",
+        "A pop-up juice bar operating in office parks during lunch hours.",
+        "A repair service for vintage and analog electronics.",
+        "A home decluttering and digital archiving business.",
+        "A bike rental service for tourists with self-guided GPS tours.",
+        "A mobile bookmobile with curated reads for different neighborhoods.",
+        "A local flower subscription service delivered by bicycle.",
+        "An urban beekeeping service offering rooftop hive setups.",
+
+        # Creative/Media
+        "A ghostwriting service for personal memoirs and family histories.",
+        "A boutique animation studio for explainer videos.",
+        "A newsletter that profiles rising indie musicians every week.",
+        "A design agency specializing in eco-conscious brand identities.",
+        "A video editing subscription service for content creators.",
+        "A storytelling consultancy for startups and nonprofits.",
+        "A creative studio producing short-form branded TikTok content.",
+        "A platform for monetizing fan fiction and serialized writing.",
+        "A freelance network for voice actors and narrators.",
+        "A company that creates personalized children's books with AI illustrations.",
+
+        # Health & Wellness
+        "A telehealth service for holistic and integrative medicine.",
+        "An app that pairs users with accountability partners for fitness goals.",
+        "A personalized supplement subscription based on DNA testing.",
+        "A mindfulness service for corporate retreats and offsites.",
+        "A meal planning app designed for people with autoimmune conditions.",
+
+        # Niche Hobbies
+        "An online marketplace for hand-forged blacksmith tools.",
+        "A kit subscription for learning ancient calligraphy styles.",
+        "A community and store for DIY modular synthesizer builders.",
+        "An online platform for trading and grading vintage postcards.",
+        "A service that helps writers self-publish illustrated children’s books.",
+        "A YouTube channel that recreates historical cooking techniques.",
+        "A subscription box for indie puzzle games and escape-room-in-a-box kits.",
+        "A membership club for astronomy enthusiasts with telescope rentals.",
+        "A service that matches hobbyists with local makerspaces.",
+        "An app for tracking and sharing urban birdwatching sightings.",
+    ]
+
 
 def get_sys_prompt() -> str:
     """
@@ -233,7 +326,8 @@ def generate_sample(
 def create_dataset(
     client : AzureOpenAI,
     output_path : str,
-    debug : bool = False
+    test : bool = False,
+    debug : bool = False,
     ) -> None:
     """
     Main function to generate the full dataset and save it as a JSON lines file.
@@ -243,6 +337,8 @@ def create_dataset(
         print("[DEBUG] Starting synthetic dataset creation...")
     
     business_ideas = get_seed_business_ideas()
+    if test:
+        business_ideas = get_sbi_test()
     generated_data = []
 
     with open(output_path, 'w') as f:
@@ -281,6 +377,7 @@ if __name__ == '__main__':
     
     create_dataset(
         client=client,
-        output_path="data/training_dataset.jsonl",
+        output_path="data/test_dataset.jsonl",
+        test=True,
         debug=True,
     )
