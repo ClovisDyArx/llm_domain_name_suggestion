@@ -12,7 +12,7 @@ import torch
 from torch.utils.data import Dataset
 from datasets import load_dataset
 
-from utils import format_prompt
+from utils import format_prompt_df
 
 # ----- Synthetic dataset creation -----
 def get_seed_business_ideas() -> list[str]:
@@ -262,7 +262,7 @@ def create_dataset(
 class DomainDataset(Dataset):
     def __init__(self, data_files="data/training_dataset.jsonl"):
         self.raw_dataset = load_dataset("json", data_files=data_files, split="train")
-        self.formatted_dataset = self.raw_dataset.map(format_prompt)
+        self.formatted_dataset = self.raw_dataset.map(format_prompt_df)
         
 
     def __len__(self):
