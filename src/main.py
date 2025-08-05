@@ -166,4 +166,5 @@ def full_pipeline():
     
     
 if __name__ == "__main__":
+    # exemple d'utilisation
     full_pipeline()

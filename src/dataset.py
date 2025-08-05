@@ -369,6 +369,7 @@ class DomainDataset(Dataset):
 
 
 if __name__ == '__main__':
+    # exemple d'utilisation
     client = AzureOpenAI(
         azure_endpoint=os.environ.get("OPENAI_ENDPOINT"),
         api_key=os.environ.get("OPENAI_API_KEY"),

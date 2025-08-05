@@ -27,6 +27,7 @@ def is_request_inappropriate(
 
 
 if __name__ == '__main__':
+    # exemple d'utilisation
     MODERATION_DEPLOYMENT_NAME = os.environ.get("OPENAI_MODERATION_DEPLOYMENT") 
 
     client = AzureOpenAI(

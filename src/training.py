@@ -17,13 +17,13 @@ def finetune_model(
     Main function to fine-tune the baseline model.
     """
     
-    # Instanciate the model's class
+    # instanciate the model's class
     domain_llm = DomainLLM(model_id=base_model_id)
     
-    # Instanciate the dataset's class
+    # instanciate the dataset's class
     domain_dataset = DomainDataset(data_files=dataset_path)
 
-    # Config training arguments
+    # config training arguments
     training_args = TrainingArguments(
         output_dir=output_dir,
         per_device_train_batch_size=4,
@@ -35,7 +35,7 @@ def finetune_model(
         fp16=False,
     )
 
-    # Config SFT trainer
+    # config SFT trainer
     trainer = SFTTrainer(
         model=domain_llm.peft_model,
         train_dataset=domain_dataset.formatted_dataset,
@@ -46,13 +46,14 @@ def finetune_model(
     trainer.train()
     print("Training complete.")
 
-    # Saving model
+    # saving model
     final_model_path = f"{output_dir}/final"
     trainer.save_model(final_model_path)
     print(f"Baseline model saved to {final_model_path}")
 
 
 if __name__ == '__main__':
+    # exemple d'utilisation
     ORIGINAL_DATASET_PATH = "data/training_dataset.jsonl"
     BASE_MODEL_ID = "google/gemma-2-2b-it"
     BASELINE_MODEL_DIR = "models/gemma2-baseline-v1"

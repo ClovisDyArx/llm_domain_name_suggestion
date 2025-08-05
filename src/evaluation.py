@@ -112,13 +112,13 @@ def run_evaluation_pipeline(
 
 
 if __name__ == '__main__':
+    # exemple d'utilisation
     client = AzureOpenAI(
         azure_endpoint=os.environ.get("OPENAI_ENDPOINT"),
         api_key=os.environ.get("OPENAI_API_KEY"),
         api_version=os.environ.get("OPENAI_API_VERSION")
     )
     
-    # exemple d'utilisation
     test_description = "A blog about vegan recipes."
     test_domains = ["veganplates.com", "plantifulbites.co", "greenchef.ai"]
     
