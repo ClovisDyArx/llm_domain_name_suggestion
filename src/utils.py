@@ -49,7 +49,7 @@ def format_answer_gemma2(suggestion : str) -> list[str]:
     * **OceanBloom.com**
     * **SeascapeThreads.com**
     """
-    # --- Format 1: Bolded domains like **OceanToWear.com:**
+    # Format 1: Bolded domains like **OceanToWear.com:**
     pattern_bold = r'\*\*([^*\n]+?)\*\*'
     matches = re.findall(pattern_bold, suggestion)
 
@@ -67,7 +67,7 @@ def format_answer_gemma2(suggestion : str) -> list[str]:
     if len(domains) > 5:
         return domains
 
-    # --- Format 2: Bullet point domains (non-bolded)
+    # Format 2: Bullet point domains (non-bolded)
     candidate_lines = re.findall(r'^[*-]\s+(.*)', suggestion, re.MULTILINE)
 
     for line in candidate_lines:
@@ -83,6 +83,22 @@ def format_answer_gemma2(suggestion : str) -> list[str]:
             domains.append(candidate)
 
     return domains
+
+
+def combine_datasets(original_path, edge_case_path, output_path):
+    """
+    A helper function to combine datasets for iterative improvement.
+    """
+    print(f"Combining '{original_path}' and '{edge_case_path}' -> '{output_path}'")
+    if not os.path.exists(original_path) or not os.path.exists(edge_case_path):
+        raise FileNotFoundError("One or both source dataset files not found.")
+    
+    with open(original_path, 'r') as f1, open(edge_case_path, 'r') as f2, open(output_path, 'w') as outfile:
+        for line in f1:
+            outfile.write(line)
+        for line in f2:
+            outfile.write(line)
+    print("Datasets combined successfully.")
 
 
 if __name__ == "__main__":

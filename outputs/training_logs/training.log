@@ -1,7 +1,48 @@
+--- Starting Full AI Engineering Pipeline ---
+
+[Step 1] Training dataset found at 'data/training_dataset.jsonl'. Skipping creation.
+
+[Step 1] Testing dataset found at 'data/test_dataset.jsonl'. Skipping creation.
+
+[Step 2] Baseline model found at 'models/gemma2-baseline-v1'. Skipping training.
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:02<00:00,  1.29s/it]
+Model and tokenizer loaded successfully.
+
+[Step 3] Evaluating baseline model performance...
+Evaluating fine-tuned Model: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 67/67 [21:09<00:00, 18.95s/it]
+
 --- Baseline Model Performance ---
 {
-  "avg_relevance": 4.731343283582089,
-  "avg_creativity": 3.7313432835820897,
-  "avg_diversity": 3.5970149253731343,
-  "avg_overall": 4.0243283582089555
+  "avg_relevance": 4.776119402985074,
+  "avg_creativity": 3.716417910447761,
+  "avg_diversity": 3.626865671641791,
+  "avg_overall": 4.008955223880597
 }
+-> Baseline Model Average Overall Score: 4.01
+
+[Step 4] Starting iterative improvement cycle...
+-> Edge case dataset not found. Skipping improvement cycle.
+-> Best performing model selected: 'models/gemma2-baseline-v1'
+
+[Step 7] Final inference example with the best model...
+  - Generating domains for: 'A mobile app that uses AI to generate personnalized domain names for any business ideas.'
+    -> Generated Domains:
+      - Nameify.ai
+      - BrandNameBot.com
+      - DomainWizard.app
+      - NameGenPro.com
+      - IdeaName.ai
+      - DomainSpark.com
+      - NameCraft.ai
+      - NameForge.app
+      - DomainMuse.com
+      - AI-Domain.com
+      - PersonalizedDomains.com
+      - CustomDomainBuilder.com
+      - DomainNameAI.com
+      - AI-PoweredDomain.com
+      - SmartDomainGenerator.com
+      - DomainIdea.com
+      - DomainAI.co
+
+--- Full Pipeline Complete ---

@@ -5,13 +5,20 @@ load_dotenv(dotenv_path='.env')
 from openai import AzureOpenAI
 
 
-def is_request_inappropriate(client, text_to_moderate: str) -> bool:
+def is_request_inappropriate(
+    client,
+    text_to_moderate: str,
+    moderation_deployment_name : str, # azure moderation model
+    ) -> bool:
     """
     Checks a text string for inappropriate content using a moderation API.
     Returns True if the content is flagged, False otherwise.
     """
     try:
-        response = client.moderations.create(input=text_to_moderate)
+        response = client.moderations.create(
+            model=moderation_deployment_name,
+            input=text_to_moderate,
+        )
         is_flagged = any(category.flagged for category in response.results[0].categories)
         return is_flagged
     except Exception as e:
@@ -20,18 +27,21 @@ def is_request_inappropriate(client, text_to_moderate: str) -> bool:
 
 
 if __name__ == '__main__':
+    MODERATION_DEPLOYMENT_NAME = os.environ.get("OPENAI_MODERATION_DEPLOYMENT") 
+
     client = AzureOpenAI(
         azure_endpoint=os.environ.get("OPENAI_ENDPOINT"),
         api_key=os.environ.get("OPENAI_API_KEY"),
         api_version=os.environ.get("OPENAI_API_VERSION")
     )
     
-    # test business ideas (added some words to throw off the model)
-    safe_text = "A horrible bakery for big dogs that makes devishly amazing custom birthday cakes."
-    unsafe_text = "A website selling super cool illegal firearms and cute killing weapons."
+    test_cases = {
+        "safe_text": "A bakery for dogs that makes custom birthday cakes.",
+        "unsafe_text": "A website selling illegal firearms and weapons.",
+        "safe_tricky_text": "A horrible bakery for big dogs that makes devishly amazing custom birthday cakes.",
+        "unsafe_tricky_text": "A website selling super cool illegal firearms and cute killing weapons."
+    }
 
-    is_safe = is_request_inappropriate(client, safe_text)
-    is_unsafe = is_request_inappropriate(client, unsafe_text)
-    
-    print(f"'{safe_text}' is inappropriate: {is_safe}") # False
-    print(f"'{unsafe_text}' is inappropriate: {is_unsafe}") # True
+    for name, text in test_cases.items():
+        is_inappropriate = is_request_inappropriate(client, text, MODERATION_DEPLOYMENT_NAME)
+        print(f"'{text}' is inappropriate: {is_inappropriate}")

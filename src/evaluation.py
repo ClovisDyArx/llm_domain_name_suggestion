@@ -1,10 +1,14 @@
-import os
 import json
-
-from openai import AzureOpenAI
+import os
+from tqdm import tqdm
+import pandas as pd
 
 from dotenv import load_dotenv
 load_dotenv(dotenv_path='.env')
+
+from openai import AzureOpenAI
+
+from inference import generate_suggestions
 
 
 def get_judge_prompt_template():
@@ -61,6 +65,50 @@ def evaluate_suggestions(client, business_description, generated_domains):
     except Exception as e:
         print(f"Error during evaluation: {e}")
         return None
+    
+
+def run_evaluation_pipeline(
+    client,
+    model,
+    tokenizer,
+    test_set_path : str,
+    output_file : str,
+    ):
+    test_set = []
+    with open(test_set_path, 'r') as f:
+        for line in f:
+            test_set.append(json.loads(line))
+    
+    all_evaluations = []
+
+    for item in tqdm(test_set, desc="Evaluating fine-tuned Model"):
+        business_desc = item['business_description']
+        
+        generated_domains = generate_suggestions(model, tokenizer, business_desc)
+        
+        evaluation_score = evaluate_suggestions(client, business_desc, generated_domains)
+        
+        if evaluation_score:
+            all_evaluations.append({
+                "business_description": business_desc,
+                "generated_domains": generated_domains,
+                **evaluation_score
+            })
+
+    eval_df = pd.DataFrame(all_evaluations)
+    baseline_performance = {
+        "avg_relevance": eval_df['relevance_score'].mean(),
+        "avg_creativity": eval_df['creativity_score'].mean(),
+        "avg_diversity": eval_df['diversity_score'].mean(),
+        "avg_overall": eval_df['overall_score'].mean()
+    }
+
+    print("\n--- Baseline Model Performance ---")
+    print(json.dumps(baseline_performance, indent=2))
+
+    eval_df.to_csv(f"outputs/evaluation_logs/{output_file}", index=False)
+    
+    return baseline_performance, eval_df
 
 
 if __name__ == '__main__':

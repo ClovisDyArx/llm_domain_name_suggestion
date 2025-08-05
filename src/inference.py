@@ -4,15 +4,12 @@ from peft import PeftModel
 
 from utils import format_prompt, format_answer_gemma2
 
-BASE_MODEL_ID = "google/gemma-2-2b-it"
-ADAPTER_PATH = "models/gemma2-baseline-v1/final"
-
 # we create placeholders for better performances.
 _model = None
 _tokenizer = None
 
 
-def load_model_and_tokenizer():
+def load_model_and_tokenizer(base_model_id : str, adapter_path : str):
     """
     Loads the base model and LoRA adapter. Caches them globally.
     """
@@ -29,27 +26,29 @@ def load_model_and_tokenizer():
 
     # loading the base model (not fine-tuned)
     base_model = AutoModelForCausalLM.from_pretrained(
-        BASE_MODEL_ID,
+        base_model_id,
         quantization_config=bnb_config,
         device_map="auto"
     )
 
     # loading the tokenizer
-    _tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_ID)
+    _tokenizer = AutoTokenizer.from_pretrained(base_model_id)
 
     # loading the peft model into the fine-tuned model
-    _model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
+    _model = PeftModel.from_pretrained(base_model, adapter_path)
     
     print("Model and tokenizer loaded successfully.")
     return _model, _tokenizer
 
 
-def generate_suggestions(business_description: str) -> list[str]:
+def generate_suggestions(
+    model,
+    tokenizer,
+    business_description: str
+    ) -> list[str]:
     """
     Generates domain name suggestions for a given business description.
     """
-    model, tokenizer = load_model_and_tokenizer()
-
     # same prompt as in training
     prompt = format_prompt(business_description)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
@@ -65,8 +64,7 @@ def generate_suggestions(business_description: str) -> list[str]:
     
     result_full = tokenizer.decode(outputs[0], skip_special_tokens=True)
     result_only_generated = result_full.split("<start_of_turn>model\n")[-1]
-    
-    # print(f"generated answer, uncleaned :\n{result_only_generated}\n\n")
+
 
     suggestions = format_answer_gemma2(result_only_generated)  
     return suggestions
@@ -74,8 +72,12 @@ def generate_suggestions(business_description: str) -> list[str]:
 
 if __name__ == '__main__':
     # exemple d'utilisation
+    base_model_id = "google/gemma-2-2b-it"
+    adapter_path = "../models/gemma2-baseline-v1/final"
+    model, tokenizer = load_model_and_tokenizer(base_model_id, adapter_path)
+    
     test_description = "A sustainable fashion brand that uses recycled ocean plastic."
-    suggestions = generate_suggestions(test_description)
+    suggestions = generate_suggestions(model, tokenizer, test_description)
     
     print(f"Business idea: '{test_description}'")
     print("\nGenerated Suggestions:")
